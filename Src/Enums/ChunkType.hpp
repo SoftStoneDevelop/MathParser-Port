@@ -1,6 +1,6 @@
 namespace MathEngine
 {
-	enum ChunkType
+	enum ChunkType : unsigned char
 	{
 		//unique types
 		None = 0,

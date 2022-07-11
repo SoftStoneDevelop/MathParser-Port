@@ -1,6 +1,6 @@
 namespace MathEngine
 {
-	enum Associativity
+	enum Associativity : unsigned char
 	{
 		None = 0,
 		Right = 1,

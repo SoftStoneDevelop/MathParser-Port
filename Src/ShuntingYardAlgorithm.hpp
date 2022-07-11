@@ -2,6 +2,8 @@
 
 #include "Enums/Associativity.hpp"
 #include "Enums/ChunkType.hpp"
+#include "Records/ChunkExpression.hpp"
+#include "Records/ExpressionItem.hpp"
 
 #include <queue>
 #include <string>
@@ -10,58 +12,6 @@
 
 namespace MathEngine
 {
-	class ExpressionItem
-	{
-	public:
-		ChunkType ChunkType;
-	};
-
-	class Operand : ExpressionItem
-	{
-	};
-
-	class PatternExpression : ExpressionItem
-	{
-	public:
-		std::string Pattern;
-	};
-
-	class Operator : PatternExpression
-	{
-	public:
-		int Order;
-		Associativity Associativity;
-	};
-
-	class Function : PatternExpression
-	{
-	public:
-		int Order;
-		Associativity Associativity;
-		int ParametrsCount;
-	};
-
-	class ChunkExpression
-	{
-	public:
-		ChunkType ChunkType;
-	};
-
-	class ChunkNumber : ChunkExpression
-	{
-	public:
-		float Number;
-		Operand& Operand;
-	};
-
-	class SequenceNumberOperation : ChunkExpression
-	{
-	public:
-		float* sequenceMemory;
-		int Size;
-		int ExpectedParamsCount;
-	};
-
 	class ShuntingYardAlgorithm
 	{
 	public:
@@ -78,7 +28,10 @@ namespace MathEngine
 			const std::queue<ChunkExpression&>& output
 		);
 
-		static void PrintRVNAndDequeueAll(const std::queue<const ChunkExpression&> rvn, const std::stringstream& strStream);
+		static void PrintRVNAndDequeueAll(
+			const std::queue<ChunkExpression&> rvn,
+			const std::stringstream& strStream
+		);
 
 	private:
 		
