@@ -24,7 +24,7 @@ namespace MathEngine
 
 		const float& GetNumber()
 		{
-			return _chunkType;
+			return _number;
 		}
 
 		const Operand& GetOperand()

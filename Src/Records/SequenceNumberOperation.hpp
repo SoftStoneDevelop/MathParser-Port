@@ -27,9 +27,19 @@ namespace MathEngine
 		SequenceNumberOperation& operator=(SequenceNumberOperation&& other) = delete;
 		SequenceNumberOperation& operator=(const SequenceNumberOperation& other) = delete;
 
-		const float& GetNumber()
+		const int& GetSize()
 		{
-			return _chunkType;
+			return _size;
+		}
+
+		const float& GetSequenceMemory()
+		{
+			return _sequenceMemory;
+		}
+
+		const int& GetExpectedParamsCount()
+		{
+			return _expectedParamsCount;
 		}
 
 		const PatternExpression& GetPatternExp()
