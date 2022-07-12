@@ -8,7 +8,7 @@ namespace MathEngine
 	class Operand : public ExpressionItem
 	{
 	public:
-		Operand(ChunkType chunkType);
+		Operand(ExpressionType type);
 
 		Operand(const Operand& other) = delete;
 		Operand(Operand&& other) = delete;

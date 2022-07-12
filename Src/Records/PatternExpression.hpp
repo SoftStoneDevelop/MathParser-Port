@@ -9,7 +9,7 @@ namespace MathEngine
 	class PatternExpression : public ExpressionItem
 	{
 	public:
-		PatternExpression(ChunkType chunkType);
+		PatternExpression(ExpressionType type);
 
 		PatternExpression(const PatternExpression& other) = delete;
 		PatternExpression(PatternExpression&& other) = delete;

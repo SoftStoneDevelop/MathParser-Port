@@ -8,6 +8,7 @@ namespace MathEngine
 	{
 	public:
 		ChunkExpression(
+			ChunkType type,
 			ExpressionItem* expressionItem
 		);
 
@@ -22,8 +23,14 @@ namespace MathEngine
 			return _expressionItem;
 		}
 
+		const ChunkType& GetType() const
+		{
+			return _type;
+		}
+
 	private:
 		ExpressionItem* _expressionItem;
+		ChunkType _type;
 	};
 
 }//namespace MathEngine

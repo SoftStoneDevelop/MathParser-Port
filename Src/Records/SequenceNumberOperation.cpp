@@ -11,7 +11,7 @@ namespace MathEngine
 		int expectedParamsCount
 		//TODO pool arrays
 	) :
-		ChunkExpression(patternExp),
+		ChunkExpression(ChunkType::SequenceNumberOperation, patternExp),
 		_sequenceMemory{ sequenceMemory },
 		_size{ size },
 		_expectedParamsCount{ expectedParamsCount }

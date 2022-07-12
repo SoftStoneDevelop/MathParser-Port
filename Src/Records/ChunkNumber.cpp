@@ -7,7 +7,7 @@ namespace MathEngine
 	ChunkNumber::ChunkNumber(
 		float number,
 		Operand* operand
-	) : ChunkExpression(operand), _number{number}
+	) : ChunkExpression(ChunkType::Number, operand), _number{ number }
 	{
 
 	}

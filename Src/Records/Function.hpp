@@ -11,7 +11,7 @@ namespace MathEngine
 	{
 	public:
 		Function(
-			ChunkType chunkType,
+			ExpressionType type,
 			int order,
 			Associativity associativity,
 			int parametrsCount

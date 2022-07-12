@@ -30,7 +30,7 @@ namespace ParserHelper
 
     static MathEngine::Operator* CreateMultiplication()
     {
-        return new MathEngine::Operator(MathEngine::ChunkType::Multiplication, 3, MathEngine::Associativity::Left);
+        return new MathEngine::Operator(MathEngine::ExpressionType::Multiplication, 3, MathEngine::Associativity::Left);
     }
 
     bool IsDivision(
@@ -52,7 +52,7 @@ namespace ParserHelper
 
     static MathEngine::Operator* CreateDivision()
     {
-        return new MathEngine::Operator(MathEngine::ChunkType::Division, 3, MathEngine::Associativity::Left);
+        return new MathEngine::Operator(MathEngine::ExpressionType::Division, 3, MathEngine::Associativity::Left);
     }
 
     bool IsAddition(
@@ -74,7 +74,7 @@ namespace ParserHelper
 
     static MathEngine::Operator* CreateAddition()
     {
-        return new MathEngine::Operator(MathEngine::ChunkType::Addition, 2, MathEngine::Associativity::Left);
+        return new MathEngine::Operator(MathEngine::ExpressionType::Addition, 2, MathEngine::Associativity::Left);
     }
 
     bool IsSubtraction(
@@ -96,7 +96,7 @@ namespace ParserHelper
 
     static MathEngine::Operator* CreateSubtraction()
     {
-        return new MathEngine::Operator(MathEngine::ChunkType::Subtraction, 2, MathEngine::Associativity::Left);
+        return new MathEngine::Operator(MathEngine::ExpressionType::Subtraction, 2, MathEngine::Associativity::Left);
     }
 
     bool IsSin(
@@ -124,22 +124,22 @@ namespace ParserHelper
 
     static MathEngine::Function* CreateSin()
     {
-        return new MathEngine::Function(MathEngine::ChunkType::Sin, 0, MathEngine::Associativity::None, 1);
+        return new MathEngine::Function(MathEngine::ExpressionType::Sin, 0, MathEngine::Associativity::None, 1);
     }
 
     static MathEngine::Operator* CreateLeftBracket()
     {
-        return new MathEngine::Operator(MathEngine::ChunkType::LeftBracket, 0, MathEngine::Associativity::None);
+        return new MathEngine::Operator(MathEngine::ExpressionType::LeftBracket, 0, MathEngine::Associativity::None);
     }
 
     static MathEngine::Operator* CreateRightBracket()
     {
-        return new MathEngine::Operator(MathEngine::ChunkType::RightBracket, 0, MathEngine::Associativity::None);
+        return new MathEngine::Operator(MathEngine::ExpressionType::RightBracket, 0, MathEngine::Associativity::None);
     }
 
     static MathEngine::Operand* CreateNumber()
     {
-        return new MathEngine::Operand(MathEngine::ChunkType::Number);
+        return new MathEngine::Operand(MathEngine::ExpressionType::Number);
     }
 
     static int IsNumber(const char* chars, const int& size, int startIndex)
@@ -162,26 +162,27 @@ namespace ParserHelper
         }
 
         bool findSeparator = false;
-        for (; startIndex < size; startIndex++)
+        int i = startIndex;
+        for (; i < size; i++)
         {
-            if (chars[startIndex] == ' ')
+            if (chars[i] == ' ')
             {
-                return startIndex;
+                break;
             }
 
-            number = std::find(std::begin(Numbers), std::end(Numbers), chars[startIndex]);
+            number = std::find(std::begin(Numbers), std::end(Numbers), chars[i]);
             if (number != std::end(Numbers))
             {
                 continue;
             }
-            else if(chars[startIndex] == ',' || chars[startIndex] == '.')
+            else if(chars[i] == ',' || chars[i] == '.')
             {
                 if (findSeparator)
                 {
                     throw std::runtime_error("Double separator in number");
                 }
 
-                if (startIndex + 1 == size)
+                if (i + 1 == size)
                 {
                     throw std::runtime_error("Unexpected end of number");
                 }
@@ -191,10 +192,10 @@ namespace ParserHelper
             }
             else
             {
-                return startIndex;
+                break;
             }
         }
 
-        return payload;
+        return i - startIndex;
     }
 }

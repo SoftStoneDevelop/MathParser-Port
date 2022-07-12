@@ -10,7 +10,7 @@
 int main()
 {
 	MathEngine::MathEngine engine;
-	auto result = engine.CalculateExpression("5 - 2");
+	auto result = engine.CalculateExpression("5 - 2 + 11");
 
 	return EXIT_SUCCESS;
 }

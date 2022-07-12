@@ -4,7 +4,7 @@
 
 namespace MathEngine
 {
-	Operand::Operand(ChunkType chunkType) : ExpressionItem(chunkType)
+	Operand::Operand(ExpressionType type) : ExpressionItem(type)
 	{
 
 	}

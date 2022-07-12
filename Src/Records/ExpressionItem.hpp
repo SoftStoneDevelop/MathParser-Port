@@ -8,7 +8,7 @@ namespace MathEngine
 	{
 	public:
 
-		ExpressionItem(ChunkType chunkType);
+		ExpressionItem(ExpressionType type);
 
 		ExpressionItem(const ExpressionItem& other) = delete;
 		ExpressionItem(ExpressionItem&& other) = delete;
@@ -16,13 +16,13 @@ namespace MathEngine
 		ExpressionItem& operator=(ExpressionItem&& other) = delete;
 		ExpressionItem& operator=(const ExpressionItem& other) = delete;
 
-		const ChunkType& GetChunkType() const
+		const ExpressionType& GetType() const
 		{
-			return _chunkType;
+			return _type;
 		}
 
 	private:
-		ChunkType _chunkType;
+		ExpressionType _type;
 	};
 
 }//namespace MathEngine

@@ -6,8 +6,9 @@
 namespace MathEngine
 {
 	ChunkExpression::ChunkExpression(
+		ChunkType type,
 		ExpressionItem* expressionItem
-	) : _expressionItem{ expressionItem }
+	) : _expressionItem{ expressionItem }, _type{type}
 	{
 
 	}

@@ -4,7 +4,7 @@
 
 namespace MathEngine
 {
-	PatternExpression::PatternExpression(ChunkType chunkType) : ExpressionItem(chunkType)
+	PatternExpression::PatternExpression(ExpressionType type) : ExpressionItem(type)
 	{
 
 	}

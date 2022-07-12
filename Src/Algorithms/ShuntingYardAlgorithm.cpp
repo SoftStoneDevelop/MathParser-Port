@@ -6,6 +6,7 @@
 #include "../Helpers/ParserHelper.hpp"
 #include "../Records/ChunkNumber.hpp"
 #include "../Records/SequenceNumberOperation.hpp"
+#include "fast_float.h"
 
 namespace MathEngine
 {
@@ -45,7 +46,7 @@ namespace MathEngine
 				while (!stackOperators->empty())
 				{
 					Operator* top = stackOperators->top();
-					if ((*top).GetChunkType() == ChunkType::LeftBracket)
+					if (top->GetType() == ExpressionType::LeftBracket)
 					{
 						break;
 					}
@@ -56,7 +57,7 @@ namespace MathEngine
 						sequenceSize,
 						expectedParamsSequence,
 						output,
-						new ChunkExpression(reinterpret_cast<ExpressionItem*>(top))
+						new ChunkExpression(ChunkType::BaseExpression, reinterpret_cast<ExpressionItem*>(top))
 					);
 				}
 
@@ -72,8 +73,8 @@ namespace MathEngine
 			numberLength = ParserHelper::IsNumber(chars, charsLength, i);
 			if (numberLength != -1)
 			{
-				//TODO cast
-				float number = 0;
+				float number;
+				auto answer2 = fast_float::from_chars(chars + i, chars + i + numberLength, number);
 
 				EnqueueOutput(
 					sequenceStack,
@@ -126,7 +127,7 @@ namespace MathEngine
 		{
 			auto top = stackOperators->top();
 			stackOperators->pop();
-			if (top->GetChunkType() == ChunkType::LeftBracket)
+			if (top->GetType() == ExpressionType::LeftBracket)
 			{
 				throw std::runtime_error("There are mismatched parentheses 'Left Bracket in end'");
 			}
@@ -136,7 +137,7 @@ namespace MathEngine
 				sequenceSize,
 				expectedParamsSequence,
 				output,
-				new ChunkExpression(top)
+				new ChunkExpression(ChunkType::BaseExpression, top)
 			);
 		}
 
@@ -145,7 +146,7 @@ namespace MathEngine
 			auto top = sequenceStack->top();
 			sequenceStack->pop();
 
-			if (top->GetExpression()->GetChunkType() == ChunkType::Number)
+			if (top->GetExpression()->GetType() == ExpressionType::Number)
 			{
 				throw std::runtime_error("Sequence must ended on number");
 			}
@@ -183,9 +184,9 @@ namespace MathEngine
 		ChunkExpression* newChunk
 	) 
 	{
-		switch (newChunk->GetExpression()->GetChunkType())
+		switch (newChunk->GetExpression()->GetType())
 		{
-		case ChunkType::Number:
+		case ExpressionType::Number:
 		{
 			if (sequenceStack->empty())
 			{
@@ -196,7 +197,7 @@ namespace MathEngine
 			}
 
 			auto chunk0 = sequenceStack->top();
-			if (chunk0->GetExpression()->GetChunkType() == ChunkType::Number)
+			if (chunk0->GetExpression()->GetType() == ExpressionType::Number)
 			{
 				sequenceStack->pop();
 				sequenceSize--;
@@ -205,7 +206,7 @@ namespace MathEngine
 				if (!sequenceStack->empty())
 				{
 					auto chunk1 = sequenceStack->top();
-					if (chunk1->GetExpression()->GetChunkType() == ChunkType::Number)
+					if (chunk1->GetExpression()->GetType() == ExpressionType::Number)
 					{
 						throw std::runtime_error("Incorrect sequence");
 					}
@@ -233,8 +234,8 @@ namespace MathEngine
 			break;
 		}
 
-		case ChunkType::Multiplication:
-		case ChunkType::Addition:
+		case ExpressionType::Multiplication:
+		case ExpressionType::Addition:
 		{
 			if (sequenceStack->empty())
 			{
@@ -244,7 +245,7 @@ namespace MathEngine
 			else
 			{
 				auto chunk0 = sequenceStack->top();
-				if (chunk0->GetExpression()->GetChunkType() == ChunkType::Number)
+				if (chunk0->GetExpression()->GetType() == ExpressionType::Number)
 				{
 					if (sequenceStack->size() == 1)
 					{
@@ -255,14 +256,14 @@ namespace MathEngine
 					{
 						sequenceStack->pop();
 						auto chunk1 = sequenceStack->top();
-						if (chunk1->GetExpression()->GetChunkType() == ChunkType::Number)
+						if (chunk1->GetExpression()->GetType() == ExpressionType::Number)
 						{
 							throw std::runtime_error("Incorrect sequence");
 						}
 
 						sequenceStack->pop();
 
-						if (chunk1->GetExpression()->GetChunkType() == newChunk->GetExpression()->GetChunkType())
+						if (chunk1->GetExpression()->GetType() == newChunk->GetExpression()->GetType())
 						{
 							sequenceStack->push(chunk0);
 							sequenceStack->push(newChunk);
@@ -288,7 +289,7 @@ namespace MathEngine
 				}
 				else
 				{
-					if (chunk0->GetExpression()->GetChunkType() == newChunk->GetExpression()->GetChunkType())
+					if (chunk0->GetExpression()->GetType() == newChunk->GetExpression()->GetType())
 					{
 						expectedParamsCount++;
 					}
@@ -317,7 +318,7 @@ namespace MathEngine
 			{
 				auto chunk0 = sequenceStack->top();
 				sequenceStack->pop();
-				if (chunk0->GetExpression()->GetChunkType() == ChunkType::Number)
+				if (chunk0->GetExpression()->GetType() == ExpressionType::Number)
 				{
 					sequenceSize--;
 					expectedParamsCount--;
@@ -325,7 +326,7 @@ namespace MathEngine
 					if (!sequenceStack->empty())
 					{
 						auto chunk1 = sequenceStack->top();
-						if (chunk1->GetExpression()->GetChunkType() == ChunkType::Number)
+						if (chunk1->GetExpression()->GetType() == ExpressionType::Number)
 						{
 							throw std::runtime_error("Incorrect sequence");
 						}
@@ -370,7 +371,7 @@ namespace MathEngine
 				auto item = sequenceStack->top();
 				sequenceStack->pop();
 
-				if (item->GetExpression()->GetChunkType() == ChunkType::Number)
+				if (item->GetExpression()->GetType() == ExpressionType::Number)
 				{
 					memory[indexMemory] = (reinterpret_cast<ChunkNumber*>(item))->GetNumber();
 					indexMemory++;

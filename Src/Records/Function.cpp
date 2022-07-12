@@ -5,12 +5,12 @@
 namespace MathEngine
 {
 	Function::Function(
-		ChunkType chunkType,
+		ExpressionType type,
 		int order,
 		Associativity associativity,
 		int parametrsCount
 	) :
-		PatternExpression(chunkType), _order{ order }, _associativity{ associativity }, _parametrsCount{parametrsCount}
+		PatternExpression(type), _order{ order }, _associativity{ associativity }, _parametrsCount{parametrsCount}
 	{
 
 	}

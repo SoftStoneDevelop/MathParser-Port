@@ -5,11 +5,11 @@
 namespace MathEngine
 {
 	Operator::Operator(
-		ChunkType chunkType,
+		ExpressionType type,
 		int order,
 		Associativity associativity
 	) :
-		PatternExpression(chunkType), _order{ order }, _associativity{associativity}
+		PatternExpression(type), _order{ order }, _associativity{associativity}
 	{
 
 	}

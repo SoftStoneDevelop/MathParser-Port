@@ -11,7 +11,7 @@ namespace MathEngine
 	{
 	public:
 		Operator(
-			ChunkType chunkType,
+			ExpressionType type,
 			int order,
 			Associativity associativity
 		);

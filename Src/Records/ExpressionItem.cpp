@@ -4,7 +4,7 @@
 
 namespace MathEngine
 {
-	ExpressionItem::ExpressionItem(ChunkType chunkType) : _chunkType{ chunkType }
+	ExpressionItem::ExpressionItem(ExpressionType type) : _type{ type }
 	{
 
 	}
