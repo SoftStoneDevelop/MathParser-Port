@@ -97,29 +97,53 @@ namespace MathEngine
 			}
 
 			//check is operator
-
+			Operator* oper = nullptr;
 			if (ParserHelper::IsMultiplication(chars, charsLength, i))
 			{
-				stackOperators->push(ParserHelper::CreateMultiplication());
-				continue;
+				oper = ParserHelper::CreateMultiplication();
 			}
-			
+			else
 			if (ParserHelper::IsDivision(chars, charsLength, i))
 			{
-				stackOperators->push(ParserHelper::CreateDivision());
-				continue;
+				oper = ParserHelper::CreateDivision();
 			}
-			
+			else
 			if (ParserHelper::IsAddition(chars, charsLength, i))
 			{
-				stackOperators->push(ParserHelper::CreateAddition());
-				continue;
+				oper = ParserHelper::CreateAddition();
 			}
-			
+			else
 			if (ParserHelper::IsSubtraction(chars, charsLength, i))
 			{
-				stackOperators->push(ParserHelper::CreateSubtraction());
-				continue;
+				oper = ParserHelper::CreateSubtraction();
+			}
+
+			if (oper != nullptr)
+			{
+				while (!stackOperators->empty())
+				{
+					auto top = stackOperators->top();
+					if (top->GetType() == ExpressionType::LeftBracket)
+					{
+						break;
+					}
+
+					if (!((top->GetOrder() > oper->GetOrder()) || (top->GetOrder() == oper->GetOrder() && oper->GetAssociativity() == Associativity::Left)))
+					{
+						break;
+					}
+
+					stackOperators->pop();
+					EnqueueOutput(
+						sequenceStack,
+						sequenceSize,
+						expectedParamsSequence,
+						output,
+						new ChunkExpression(ChunkType::BaseExpression, top)
+					);
+				}
+
+				stackOperators->push(oper);
 			}
 		}
 
