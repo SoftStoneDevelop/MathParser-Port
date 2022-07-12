@@ -25,12 +25,12 @@ namespace MathEngine
 		static void ToRVNOpt(
 			const char* chars,
 			const int& charsLength,
-			const std::queue<ChunkExpression*>& output
+			std::queue<ChunkExpression*>& output
 		);
 
 		static void PrintRVNAndDequeueAll(
-			const std::queue<ChunkExpression*> rvn,
-			const std::stringstream& strStream
+			std::queue<ChunkExpression*>& rvn,
+			std::stringstream& strStream
 		);
 
 	private:
@@ -39,19 +39,19 @@ namespace MathEngine
 		/// Enqueue to Output queue and apply optimization
 		/// </summary>
 		static void EnqueueOutput(
-			const std::stack<ChunkExpression*>& sequenceStack,
+			std::stack<ChunkExpression*>* const sequenceStack,
 			const int& sequenceSize,
 			const int& expectedParamsCount,
-			const std::queue<ChunkExpression*>& output,
-			const ChunkExpression& newChunk
+			std::queue<ChunkExpression*>& output,
+			const ChunkExpression* newChunk
 		);
 
 		static void WriteSequence(
-			const std::stack<ChunkExpression*> sequenceStack,
+			std::stack<ChunkExpression*>* const sequenceStack,
 			const int& sequenceSize,
 			const int& expectedParamsCount,
-			const std::queue<ChunkExpression*>& output,
-			const ExpressionItem& oper
+			std::queue<ChunkExpression*>& output,
+			const ExpressionItem* oper
 		);
 	};
 

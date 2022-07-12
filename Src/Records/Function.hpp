@@ -7,12 +7,11 @@
 
 namespace MathEngine
 {
-	class Function : PatternExpression
+	class Function : public PatternExpression
 	{
 	public:
 		Function(
 			ChunkType chunkType,
-			std::string pattern,
 			int order,
 			Associativity associativity,
 			int parametrsCount
@@ -24,17 +23,17 @@ namespace MathEngine
 		Function& operator=(Function&& other) = delete;
 		Function& operator=(const Function& other) = delete;
 
-		const Associativity& GetAssociativity()
+		const Associativity& GetAssociativity() const
 		{
 			return _associativity;
 		}
 
-		const int& GetOrder()
+		const int& GetOrder() const
 		{
 			return _order;
 		}
 
-		const int& GetParametrsCount()
+		const int& GetParametrsCount() const
 		{
 			return _parametrsCount;
 		}

@@ -7,12 +7,11 @@
 
 namespace MathEngine
 {
-	class SequenceNumberOperation : ChunkExpression
+	class SequenceNumberOperation : public ChunkExpression
 	{
 	public:
 		SequenceNumberOperation(
-			ChunkType chunkType,
-			PatternExpression& patternExp,
+			PatternExpression* patternExp,
 			float* sequenceMemory,
 			int size,
 			int expectedParamsCount
@@ -27,31 +26,26 @@ namespace MathEngine
 		SequenceNumberOperation& operator=(SequenceNumberOperation&& other) = delete;
 		SequenceNumberOperation& operator=(const SequenceNumberOperation& other) = delete;
 
-		const int& GetSize()
+		const int& GetSize() const
 		{
 			return _size;
 		}
 
-		const float& GetSequenceMemory()
+		const float& GetSequenceMemory() const
 		{
 			return *_sequenceMemory;
 		}
 
-		const int& GetExpectedParamsCount()
+		const int& GetExpectedParamsCount() const
 		{
 			return _expectedParamsCount;
-		}
-
-		const PatternExpression& GetPatternExp()
-		{
-			return _patternExp;
 		}
 
 	private:
 		float* _sequenceMemory;
 		int _size;
 		int _expectedParamsCount;
-		PatternExpression& _patternExp;
+		PatternExpression* _patternExp;
 		//TODO pool arrays
 	};
 

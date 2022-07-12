@@ -6,10 +6,10 @@
 
 namespace MathEngine
 {
-	class PatternExpression : ExpressionItem
+	class PatternExpression : public ExpressionItem
 	{
 	public:
-		PatternExpression(ChunkType chunkType, std::string pattern);
+		PatternExpression(ChunkType chunkType);
 
 		PatternExpression(const PatternExpression& other) = delete;
 		PatternExpression(PatternExpression&& other) = delete;
@@ -17,13 +17,7 @@ namespace MathEngine
 		PatternExpression& operator=(PatternExpression&& other) = delete;
 		PatternExpression& operator=(const PatternExpression& other) = delete;
 
-		const std::string& GetPattern()
-		{
-			return _pattern;
-		}
-
 	private:
-		std::string _pattern;
 	};
 
 }//namespace MathEngine

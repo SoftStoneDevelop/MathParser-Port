@@ -5,7 +5,7 @@
 
 namespace MathEngine
 {
-	class Operand : ExpressionItem
+	class Operand : public ExpressionItem
 	{
 	public:
 		Operand(ChunkType chunkType);

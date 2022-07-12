@@ -10,89 +10,178 @@
 namespace ParserHelper
 {
     static const char Numbers[] = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9' };
-    static const MathEngine::Operator Operators[] = 
-    { 
-        MathEngine::Operator(MathEngine::ChunkType::Multiplication, "*", 3, MathEngine::Associativity::Left),//0
-        MathEngine::Operator(MathEngine::ChunkType::Division,       "/", 3, MathEngine::Associativity::Left),//1
-        MathEngine::Operator(MathEngine::ChunkType::Addition,       "+", 2, MathEngine::Associativity::Left),//2
-        MathEngine::Operator(MathEngine::ChunkType::Subtraction,    "-", 2, MathEngine::Associativity::Left)//3
-    };
 
-    static const MathEngine::Operator& GetMultiplication()
+    bool IsMultiplication(
+        const char* chars,
+        const int& size,
+        int& startIndex
+    )
     {
-        return Operators[0];
+        if (chars[startIndex] == '*')
+        {
+            startIndex++;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
-    static const MathEngine::Operator& GetDivision()
+    static MathEngine::Operator* CreateMultiplication()
     {
-        return Operators[1];
+        return new MathEngine::Operator(MathEngine::ChunkType::Multiplication, 3, MathEngine::Associativity::Left);
     }
 
-    static const MathEngine::Operator& GetAddition()
+    bool IsDivision(
+        const char* chars,
+        const int& size,
+        int& startIndex
+    )
     {
-        return Operators[2];
+        if (chars[startIndex] == '/')
+        {
+            startIndex++;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
-    static const MathEngine::Operator& GetSubtraction()
+    static MathEngine::Operator* CreateDivision()
     {
-        return Operators[3];
+        return new MathEngine::Operator(MathEngine::ChunkType::Division, 3, MathEngine::Associativity::Left);
     }
 
-    static const MathEngine::Function Functions[] =
+    bool IsAddition(
+        const char* chars,
+        const int& size,
+        int& startIndex
+    )
     {
-        MathEngine::Function(MathEngine::ChunkType::Sin, "sin", 0, MathEngine::Associativity::None, 1),//0
-    };
-
-    static const MathEngine::Function& GetSin()
-    {
-        return Functions[0];
+        if (chars[startIndex] == '+')
+        {
+            startIndex++;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
-    static const MathEngine::Operator LeftBracket(MathEngine::ChunkType::None, "(", 0, MathEngine::Associativity::None);
-    static const MathEngine::Operator RightBracket(MathEngine::ChunkType::None, "(", 0, MathEngine::Associativity::None);
-    static const MathEngine::Operand NumberOperand(MathEngine::ChunkType::Number);
-
-    static int IsNumber(const char* chars, const int& size)
+    static MathEngine::Operator* CreateAddition()
     {
-        if (size < 1)
+        return new MathEngine::Operator(MathEngine::ChunkType::Addition, 2, MathEngine::Associativity::Left);
+    }
+
+    bool IsSubtraction(
+        const char* chars,
+        const int& size,
+        int& startIndex
+    )
+    {
+        if (chars[startIndex] == '-')
+        {
+            startIndex++;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    static MathEngine::Operator* CreateSubtraction()
+    {
+        return new MathEngine::Operator(MathEngine::ChunkType::Subtraction, 2, MathEngine::Associativity::Left);
+    }
+
+    bool IsSin(
+        const char* chars,
+        const int& size,
+        int& startIndex
+    )
+    {
+        if (size - startIndex < 3)
+        {
+            return false;
+        }
+
+        if (chars[startIndex] == 's' &&
+            chars[startIndex + 1] == 'i'&&
+            chars[startIndex + 2] == 'n'
+            )
+        {
+            startIndex += 3;
+            return true;
+        }
+
+        return false;
+    }
+
+    static MathEngine::Function* CreateSin()
+    {
+        return new MathEngine::Function(MathEngine::ChunkType::Sin, 0, MathEngine::Associativity::None, 1);
+    }
+
+    static MathEngine::Operator* CreateLeftBracket()
+    {
+        return new MathEngine::Operator(MathEngine::ChunkType::LeftBracket, 0, MathEngine::Associativity::None);
+    }
+
+    static MathEngine::Operator* CreateRightBracket()
+    {
+        return new MathEngine::Operator(MathEngine::ChunkType::RightBracket, 0, MathEngine::Associativity::None);
+    }
+
+    static MathEngine::Operand* CreateNumber()
+    {
+        return new MathEngine::Operand(MathEngine::ChunkType::Number);
+    }
+
+    static int IsNumber(const char* chars, const int& size, int startIndex)
+    {
+        int payload = size - startIndex;
+        if (payload < 1)
         {
             throw std::runtime_error("Empty array");
         }
 
-        int i = 0;
-
-        const char* number = std::find(std::begin(Numbers), std::end(Numbers), chars[i]);
+        const char* number = std::find(std::begin(Numbers), std::end(Numbers), chars[startIndex]);
         if (number == std::end(Numbers))
         {
             return -1;
         }
 
-        if (size > 2 && chars[0] == '0' && chars[1] == '0')
+        if (payload > 2 && chars[startIndex] == '0' && chars[startIndex + 1] == '0')
         {
             throw std::runtime_error("Incorrect number");
         }
 
         bool findSeparator = false;
-        for (; i < size; i++)
+        for (; startIndex < size; startIndex++)
         {
-            if (chars[i] == ' ')
+            if (chars[startIndex] == ' ')
             {
-                return i;
+                return startIndex;
             }
 
-            number = std::find(std::begin(Numbers), std::end(Numbers), chars[i]);
+            number = std::find(std::begin(Numbers), std::end(Numbers), chars[startIndex]);
             if (number != std::end(Numbers))
             {
                 continue;
             }
-            else if(chars[i] == ',' || chars[i] == '.')
+            else if(chars[startIndex] == ',' || chars[startIndex] == '.')
             {
                 if (findSeparator)
                 {
                     throw std::runtime_error("Double separator in number");
                 }
 
-                if (i + 1 == size)
+                if (startIndex + 1 == size)
                 {
                     throw std::runtime_error("Unexpected end of number");
                 }
@@ -102,7 +191,7 @@ namespace ParserHelper
             }
             else
             {
-                return i;
+                return startIndex;
             }
         }
     }

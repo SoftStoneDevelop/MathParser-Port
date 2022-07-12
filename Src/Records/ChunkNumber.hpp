@@ -7,13 +7,12 @@
 
 namespace MathEngine
 {
-	class ChunkNumber : ChunkExpression
+	class ChunkNumber : public ChunkExpression
 	{
 	public:
 		ChunkNumber(
-			ChunkType chunkType,
 			float number,
-			Operand& operand
+			Operand* operand
 		);
 
 		ChunkNumber(const ChunkNumber& other) = delete;
@@ -22,19 +21,13 @@ namespace MathEngine
 		ChunkNumber& operator=(ChunkNumber&& other) = delete;
 		ChunkNumber& operator=(const ChunkNumber& other) = delete;
 
-		const float& GetNumber()
+		const float& GetNumber() const
 		{
 			return _number;
 		}
 
-		const Operand& GetOperand()
-		{
-			return _operand;
-		}
-
 	private:
 		float _number;
-		Operand& _operand;
 	};
 
 }//namespace MathEngine

@@ -5,18 +5,16 @@
 namespace MathEngine
 {
 	SequenceNumberOperation::SequenceNumberOperation(
-		ChunkType chunkType,
-		PatternExpression& patternExp,
+		PatternExpression* patternExp,
 		float* sequenceMemory,
 		int size,
 		int expectedParamsCount
 		//TODO pool arrays
 	) :
-		ChunkExpression(chunkType),
+		ChunkExpression(patternExp),
 		_sequenceMemory{ sequenceMemory },
 		_size{ size },
-		_expectedParamsCount{ expectedParamsCount },
-		_patternExp{ patternExp }
+		_expectedParamsCount{ expectedParamsCount }
 		//TODO pool arrays
 	{
 

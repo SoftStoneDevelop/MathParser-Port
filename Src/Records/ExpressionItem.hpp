@@ -16,7 +16,7 @@ namespace MathEngine
 		ExpressionItem& operator=(ExpressionItem&& other) = delete;
 		ExpressionItem& operator=(const ExpressionItem& other) = delete;
 
-		const ChunkType& GetChunkType()
+		const ChunkType& GetChunkType() const
 		{
 			return _chunkType;
 		}

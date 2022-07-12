@@ -5,10 +5,9 @@
 namespace MathEngine
 {
 	ChunkNumber::ChunkNumber(
-		ChunkType chunkType,
 		float number,
-		Operand& operand
-	) : ChunkExpression(chunkType), _number{number}, _operand{ operand }
+		Operand* operand
+	) : ChunkExpression(operand), _number{number}
 	{
 
 	}

@@ -1,12 +1,13 @@
 #pragma once
 
 #include "ChunkExpression.hpp"
+#include <istream>
 
 namespace MathEngine
 {
 	ChunkExpression::ChunkExpression(
-		ChunkType chunkType
-	) : _chunkType{chunkType}
+		ExpressionItem* expressionItem
+	) : _expressionItem{ expressionItem }
 	{
 
 	}

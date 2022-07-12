@@ -7,6 +7,8 @@ namespace MathEngine
 		//unique types
 		None = 0,
 		Number = 1,
+		LeftBracket = 2,
+		RightBracket = 3,
 
 		//operators
 		Multiplication = 10,

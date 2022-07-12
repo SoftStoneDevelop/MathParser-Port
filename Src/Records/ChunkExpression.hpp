@@ -1,6 +1,6 @@
 #pragma once
 
-#include "..\Enums\ChunkType.hpp"
+#include "ExpressionItem.hpp"
 
 namespace MathEngine
 {
@@ -8,7 +8,7 @@ namespace MathEngine
 	{
 	public:
 		ChunkExpression(
-			ChunkType chunkType
+			ExpressionItem* expressionItem
 		);
 
 		ChunkExpression(const ChunkExpression& other) = delete;
@@ -17,13 +17,13 @@ namespace MathEngine
 		ChunkExpression& operator=(ChunkExpression&& other) = delete;
 		ChunkExpression& operator=(const ChunkExpression& other) = delete;
 
-		const ChunkType& GetChunkType()
+		const ExpressionItem* GetExpression() const
 		{
-			return _chunkType;
+			return _expressionItem;
 		}
 
 	private:
-		ChunkType _chunkType;
+		ExpressionItem* _expressionItem;
 	};
 
 }//namespace MathEngine
