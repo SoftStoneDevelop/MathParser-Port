@@ -1,42 +1,17 @@
 #include <cstdlib>
 #include <iostream>
+#include "Algorithms/ShuntingYardAlgorithm.hpp"
+#include "Records/ChunkExpression.hpp"
 
-class Base
-{
-public:
-	Base()
-	{
-		std::cout << "Base constructor\n";
-	}
-
-	Base(const Base& base)
-	{
-		std::cout << "Base copy constructor\n";
-	}
-
-	Base(Base&& base)
-	{
-		std::cout << "Base move constructor\n";
-	}
-};
-
-class Base2
-{
-public:
-	Base2(Base& base) : base{base}
-	{
-		std::cout << "Base2 constructor\n";
-	}
-
-	Base& base;
-};
-
-int main() 
+int main()
 {
 	std::cout << "Hello bich\n";
-	Base b;
-	Base2 b2(b);
-	char word;
-	std::cin >> word;
+	auto chars = new char[]{'s', ' '};
+	std::queue<MathEngine::ChunkExpression*>* queue = new std::queue<MathEngine::ChunkExpression*>();
+	MathEngine::ShuntingYardAlgorithm::ToRVNOpt(&chars[0], 2, *queue);
+
+	delete[] chars;
+	delete queue;
+
 	return EXIT_SUCCESS;
 }

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Enums/ChunkType.hpp"
+#include "..\Enums\ChunkType.hpp"
 #include "ChunkExpression.hpp"
 #include "PatternExpression.hpp"
 #include <iostream>
@@ -34,7 +34,7 @@ namespace MathEngine
 
 		const float& GetSequenceMemory()
 		{
-			return _sequenceMemory;
+			return *_sequenceMemory;
 		}
 
 		const int& GetExpectedParamsCount()

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ExpressionItem.hpp"
-#include "Enums/ChunkType.hpp"
+#include "..\Enums\ChunkType.hpp"
 #include <string>
 
 namespace MathEngine

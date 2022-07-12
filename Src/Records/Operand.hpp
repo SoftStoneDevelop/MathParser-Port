@@ -1,12 +1,13 @@
 #pragma once
 
-#include "Enums/ChunkType.hpp"
+#include "..\Enums\ChunkType.hpp"
 #include "ExpressionItem.hpp"
 
 namespace MathEngine
 {
 	class Operand : ExpressionItem
 	{
+	public:
 		Operand(ChunkType chunkType);
 
 		Operand(const Operand& other) = delete;

@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Enums/Associativity.hpp"
-#include "Enums/ChunkType.hpp"
-#include "Records/ChunkExpression.hpp"
-#include "Records/ExpressionItem.hpp"
+#include "..\Enums\Associativity.hpp"
+#include "..\Enums\ChunkType.hpp"
+#include "../Records/ChunkExpression.hpp"
+#include "../Records/ExpressionItem.hpp"
 
 #include <queue>
 #include <string>
@@ -25,11 +25,11 @@ namespace MathEngine
 		static void ToRVNOpt(
 			const char* chars,
 			const int& charsLength,
-			const std::queue<ChunkExpression&>& output
+			const std::queue<ChunkExpression*>& output
 		);
 
 		static void PrintRVNAndDequeueAll(
-			const std::queue<ChunkExpression&> rvn,
+			const std::queue<ChunkExpression*> rvn,
 			const std::stringstream& strStream
 		);
 
@@ -39,18 +39,18 @@ namespace MathEngine
 		/// Enqueue to Output queue and apply optimization
 		/// </summary>
 		static void EnqueueOutput(
-			const std::stack<ChunkExpression&>& sequenceStack,
+			const std::stack<ChunkExpression*>& sequenceStack,
 			const int& sequenceSize,
 			const int& expectedParamsCount,
-			const std::queue<ChunkExpression&>& output,
+			const std::queue<ChunkExpression*>& output,
 			const ChunkExpression& newChunk
 		);
 
 		static void WriteSequence(
-			const std::stack<ChunkExpression&> sequenceStack,
+			const std::stack<ChunkExpression*> sequenceStack,
 			const int& sequenceSize,
 			const int& expectedParamsCount,
-			const std::queue<ChunkExpression&>& output,
+			const std::queue<ChunkExpression*>& output,
 			const ExpressionItem& oper
 		);
 	};

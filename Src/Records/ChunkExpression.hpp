@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Enums/ChunkType.hpp"
+#include "..\Enums\ChunkType.hpp"
 
 namespace MathEngine
 {

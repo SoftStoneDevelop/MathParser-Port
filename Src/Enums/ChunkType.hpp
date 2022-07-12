@@ -1,6 +1,8 @@
+#pragma once
+
 namespace MathEngine
 {
-	enum ChunkType : unsigned char
+	enum class ChunkType
 	{
 		//unique types
 		None = 0,
@@ -15,4 +17,5 @@ namespace MathEngine
 		//functions
 		Sin = 100,
 	};
-}
+
+}//namespace MathEngine

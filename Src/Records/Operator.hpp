@@ -1,8 +1,8 @@
 #pragma once
 
 #include "PatternExpression.hpp"
-#include "Enums/Associativity.hpp"
-#include "Enums/ChunkType.hpp"
+#include "..\Enums\Associativity.hpp"
+#include "..\Enums\ChunkType.hpp"
 #include <string>
 
 namespace MathEngine

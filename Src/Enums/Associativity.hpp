@@ -1,10 +1,12 @@
+#pragma once
+
 namespace MathEngine
 {
-	enum Associativity : unsigned char
+	enum class Associativity
 	{
 		None = 0,
 		Right = 1,
-		Left = 2,
-	}
+		Left = 2
+	};
 
 }//namespace MathEngine

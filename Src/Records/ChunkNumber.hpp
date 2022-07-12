@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Enums/ChunkType.hpp"
+#include "..\Enums\ChunkType.hpp"
 #include "ChunkExpression.hpp"
 #include "Operand.hpp"
 #include <iostream>
