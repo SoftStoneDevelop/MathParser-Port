@@ -40,18 +40,18 @@ namespace MathEngine
 		/// </summary>
 		static void EnqueueOutput(
 			std::stack<ChunkExpression*>* const sequenceStack,
-			const int& sequenceSize,
-			const int& expectedParamsCount,
+			int& sequenceSize,
+			int& expectedParamsCount,
 			std::queue<ChunkExpression*>& output,
-			const ChunkExpression* newChunk
+			ChunkExpression* newChunk
 		);
 
 		static void WriteSequence(
 			std::stack<ChunkExpression*>* const sequenceStack,
-			const int& sequenceSize,
-			const int& expectedParamsCount,
+			int& sequenceSize,
+			int& expectedParamsCount,
 			std::queue<ChunkExpression*>& output,
-			const ExpressionItem* oper
+			ExpressionItem* oper
 		);
 	};
 
