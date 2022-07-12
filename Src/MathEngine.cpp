@@ -57,13 +57,13 @@ namespace MathEngine
 				{
 				case ExpressionType::Multiplication:
 				{
-					//TODO
+					stackOperands->push(Multiplication(sequenceNumberOperation->GetSequenceMemory(), sequenceNumberOperation->GetExpectedParamsCount()));
 					break;
 				}
 
 				case ExpressionType::Addition:
 				{
-					//TODO
+					stackOperands->push(Addition(sequenceNumberOperation->GetSequenceMemory(), sequenceNumberOperation->GetExpectedParamsCount()));
 					break;
 				}
 
@@ -181,6 +181,28 @@ namespace MathEngine
 
 		delete stackOperands;
 		delete queue;
+
+		return result;
+	}
+
+	float MathEngine::Multiplication(float* data, const int& size)
+	{
+		float result = data[0];
+		for (int i = 1; i < size; i++)
+		{
+			result *= data[i];
+		}
+
+		return result;
+	}
+
+	float MathEngine::Addition(float* data, const int& size)
+	{
+		float result = data[0];
+		for (int i = 1; i < size; i++)
+		{
+			result += data[i];
+		}
 
 		return result;
 	}
