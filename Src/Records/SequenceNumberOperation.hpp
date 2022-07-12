@@ -31,9 +31,9 @@ namespace MathEngine
 			return _size;
 		}
 
-		const float& GetSequenceMemory() const
+		float* GetSequenceMemory() const
 		{
-			return *_sequenceMemory;
+			return _sequenceMemory;
 		}
 
 		const int& GetExpectedParamsCount() const

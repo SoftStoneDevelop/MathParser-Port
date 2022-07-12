@@ -1,17 +1,16 @@
+#pragma once
+
 #include <cstdlib>
 #include <iostream>
 #include "Algorithms/ShuntingYardAlgorithm.hpp"
 #include "Records/ChunkExpression.hpp"
+#include "MathEngine.hpp"
+#include <string>
 
 int main()
 {
-	std::cout << "Hello bich\n";
-	auto chars = new char[]{'s', ' '};
-	std::queue<MathEngine::ChunkExpression*>* queue = new std::queue<MathEngine::ChunkExpression*>();
-	MathEngine::ShuntingYardAlgorithm::ToRVNOpt(&chars[0], 2, *queue);
-
-	delete[] chars;
-	delete queue;
+	MathEngine::MathEngine engine;
+	auto result = engine.CalculateExpression("5 - 2");
 
 	return EXIT_SUCCESS;
 }

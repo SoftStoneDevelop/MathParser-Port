@@ -194,5 +194,7 @@ namespace ParserHelper
                 return startIndex;
             }
         }
+
+        return payload;
     }
 }

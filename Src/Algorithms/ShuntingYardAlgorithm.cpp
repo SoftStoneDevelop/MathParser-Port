@@ -73,7 +73,7 @@ namespace MathEngine
 			if (numberLength != -1)
 			{
 				//TODO cast
-				float number;
+				float number = 0;
 
 				EnqueueOutput(
 					sequenceStack,
