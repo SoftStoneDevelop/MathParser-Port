@@ -23,6 +23,7 @@ namespace MathEngine
 		int sequenceSize = 0;
 		int expectedParamsSequence = 0;
 
+		int skipLength = 0;
 		for (int i = 0; i < charsLength; i++)
 		{
 			if (chars[i] == ' ')
@@ -92,31 +93,41 @@ namespace MathEngine
 			}
 
 			//check is function
-			if (ParserHelper::IsSin(chars, charsLength, i))
+			if (ParserHelper::IsSin(chars, charsLength, i, skipLength))
 			{
+				i += skipLength - 1;
+				skipLength = 0;
 				stackOperators->push(reinterpret_cast<Operator*>(ParserHelper::CreateSin()));
 				continue;
 			}
 
 			//check is operator
 			Operator* oper = nullptr;
-			if (ParserHelper::IsMultiplication(chars, charsLength, i))
+			if (ParserHelper::IsMultiplication(chars, charsLength, i, skipLength))
 			{
+				i += skipLength - 1;
+				skipLength = 0;
 				oper = ParserHelper::CreateMultiplication();
 			}
 			else
-			if (ParserHelper::IsDivision(chars, charsLength, i))
+			if (ParserHelper::IsDivision(chars, charsLength, i, skipLength))
 			{
+				i += skipLength - 1;
+				skipLength = 0;
 				oper = ParserHelper::CreateDivision();
 			}
 			else
-			if (ParserHelper::IsAddition(chars, charsLength, i))
+			if (ParserHelper::IsAddition(chars, charsLength, i, skipLength))
 			{
+				i += skipLength - 1;
+				skipLength = 0;
 				oper = ParserHelper::CreateAddition();
 			}
 			else
-			if (ParserHelper::IsSubtraction(chars, charsLength, i))
+			if (ParserHelper::IsSubtraction(chars, charsLength, i, skipLength))
 			{
+				i += skipLength - 1;
+				skipLength = 0;
 				oper = ParserHelper::CreateSubtraction();
 			}
 

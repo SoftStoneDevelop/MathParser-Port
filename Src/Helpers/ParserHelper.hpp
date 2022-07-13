@@ -14,12 +14,13 @@ namespace ParserHelper
     bool IsMultiplication(
         const char* chars,
         const int& size,
-        int& startIndex
+        const int& startIndex,
+        int& skipLength
     )
     {
         if (chars[startIndex] == '*')
         {
-            startIndex++;
+            skipLength = 1;
             return true;
         }
         else
@@ -36,12 +37,13 @@ namespace ParserHelper
     bool IsDivision(
         const char* chars,
         const int& size,
-        int& startIndex
+        const int& startIndex,
+        int& skipLength
     )
     {
         if (chars[startIndex] == '/')
         {
-            startIndex++;
+            skipLength = 1;
             return true;
         }
         else
@@ -58,12 +60,13 @@ namespace ParserHelper
     bool IsAddition(
         const char* chars,
         const int& size,
-        int& startIndex
+        const int& startIndex,
+        int& skipLength
     )
     {
         if (chars[startIndex] == '+')
         {
-            startIndex++;
+            skipLength = 1;
             return true;
         }
         else
@@ -80,12 +83,13 @@ namespace ParserHelper
     bool IsSubtraction(
         const char* chars,
         const int& size,
-        int& startIndex
+        const int& startIndex,
+        int& skipLength
     )
     {
         if (chars[startIndex] == '-')
         {
-            startIndex++;
+            skipLength = 1;
             return true;
         }
         else
@@ -102,7 +106,8 @@ namespace ParserHelper
     bool IsSin(
         const char* chars,
         const int& size,
-        int& startIndex
+        const int& startIndex,
+        int& skipLength
     )
     {
         if (size - startIndex < 3)
@@ -115,7 +120,7 @@ namespace ParserHelper
             chars[startIndex + 2] == 'n'
             )
         {
-            startIndex += 3;
+            skipLength = 3;
             return true;
         }
 
