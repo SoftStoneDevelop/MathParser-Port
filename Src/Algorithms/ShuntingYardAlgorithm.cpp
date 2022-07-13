@@ -66,6 +66,8 @@ namespace MathEngine
 					throw std::runtime_error("There are mismatched parentheses 'Left Bracket'");
 				}
 
+				Operator* top = stackOperators->top();
+				delete top;
 				stackOperators->pop();
 			}
 
