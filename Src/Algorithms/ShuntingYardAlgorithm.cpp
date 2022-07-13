@@ -157,7 +157,10 @@ namespace MathEngine
 				}
 
 				stackOperators->push(oper);
+				continue;
 			}
+
+			throw std::runtime_error("Unknown symbol in expression - " + chars[i]);
 		}
 
 		while (!stackOperators->empty())
