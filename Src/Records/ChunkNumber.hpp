@@ -3,7 +3,6 @@
 #include "..\Enums\ChunkType.hpp"
 #include "ChunkExpression.hpp"
 #include "Operand.hpp"
-#include <iostream>
 
 namespace MathEngine
 {
@@ -12,7 +11,7 @@ namespace MathEngine
 	public:
 		ChunkNumber(
 			float number,
-			Operand* operand
+			std::shared_ptr<Operand> operand
 		);
 
 		ChunkNumber(const ChunkNumber& other) = delete;

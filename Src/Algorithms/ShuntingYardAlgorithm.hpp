@@ -9,6 +9,7 @@
 #include <string>
 #include <stack>
 #include <sstream>
+#include "Helpers/ParserHelper.hpp"
 
 namespace MathEngine
 {
@@ -22,13 +23,13 @@ namespace MathEngine
 		/// <param name="chars">Input math expression in infix notation</param>
 		/// <param name="charsLength">length chars array</param>
 		/// <param name="output">Output data in the peverse polish notation <see cref="https://en.wikipedia.org/wiki/Reverse_Polish_notation"/></param>
-		static void ToRVNOpt(
+		void ToRVNOpt(
 			const char* chars,
 			const int& charsLength,
 			std::queue<ChunkExpression*>& output
 		);
 
-		static void PrintRVNAndDequeueAll(
+		void PrintRVNAndDequeueAll(
 			std::queue<ChunkExpression*>& rvn,
 			std::stringstream& strStream
 		);
@@ -38,21 +39,23 @@ namespace MathEngine
 		/// <summary>
 		/// Enqueue to Output queue and apply optimization
 		/// </summary>
-		static void EnqueueOutput(
-			std::stack<ChunkExpression*>* const sequenceStack,
+		void EnqueueOutput(
+			std::stack<ChunkExpression*>& sequenceStack,
 			int& sequenceSize,
 			int& expectedParamsCount,
 			std::queue<ChunkExpression*>& output,
 			ChunkExpression* newChunk
 		);
 
-		static void WriteSequence(
-			std::stack<ChunkExpression*>* const sequenceStack,
+		void WriteSequence(
+			std::stack<ChunkExpression*>& sequenceStack,
 			int& sequenceSize,
 			int& expectedParamsCount,
 			std::queue<ChunkExpression*>& output,
-			ExpressionItem* oper
+			std::shared_ptr<ExpressionItem> oper
 		);
+
+		ParserHelper _parserHelper{};
 	};
 
 }//namespace MathEngine

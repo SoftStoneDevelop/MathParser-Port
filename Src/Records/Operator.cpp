@@ -9,7 +9,7 @@ namespace MathEngine
 		int order,
 		Associativity associativity
 	) :
-		PatternExpression(type), _order{ order }, _associativity{associativity}
+		PatternExpression(type, order, associativity)
 	{
 
 	}

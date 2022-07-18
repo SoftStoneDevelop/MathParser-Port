@@ -1,6 +1,7 @@
 #pragma once
 
 #include "ExpressionItem.hpp"
+#include <memory>
 
 namespace MathEngine
 {
@@ -9,7 +10,7 @@ namespace MathEngine
 	public:
 		ChunkExpression(
 			ChunkType type,
-			ExpressionItem* expressionItem
+			std::shared_ptr<ExpressionItem> expressionItem
 		);
 
 		ChunkExpression(const ChunkExpression& other) = delete;
@@ -20,6 +21,11 @@ namespace MathEngine
 
 		ExpressionItem* GetExpression() const
 		{
+			return _expressionItem.get();
+		}
+
+		std::shared_ptr<ExpressionItem> GetSharedExpression() const
+		{
 			return _expressionItem;
 		}
 
@@ -29,7 +35,7 @@ namespace MathEngine
 		}
 
 	private:
-		ExpressionItem* _expressionItem;
+		std::shared_ptr<ExpressionItem> _expressionItem;
 		ChunkType _type;
 	};
 

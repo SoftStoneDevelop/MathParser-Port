@@ -20,19 +20,19 @@ namespace MathEngine
 		const int& expressionSize
 	)
 	{
-		std::queue<ChunkExpression*>* const queue = new std::queue<ChunkExpression*>();
-		ShuntingYardAlgorithm::ToRVNOpt(expression, expressionSize, *queue);
-		std::stack<float>* const  stackOperands = new std::stack<float>();
+		std::queue<ChunkExpression*> queue = std::queue<ChunkExpression*>();
+		ShuntingYardAlgorithm sya;
+		sya.ToRVNOpt(expression, expressionSize, queue);
+		std::stack<float> stackOperands = std::stack<float>();
 
-		while (!queue->empty())
+		while (!queue.empty())
 		{
-			auto chunk = queue->front();
-			queue->pop();
+			auto chunk = queue.front();
+			queue.pop();
 
 			if (chunk->GetType() == ChunkType::Number)
 			{
-				stackOperands->emplace(static_cast<ChunkNumber*>(chunk)->GetNumber());
-				delete chunk->GetExpression();
+				stackOperands.emplace(static_cast<ChunkNumber*>(chunk)->GetNumber());
 				delete chunk;
 
 				continue;
@@ -44,26 +44,26 @@ namespace MathEngine
 				int startIndex = sequenceNumberOperation->GetExpectedParamsCount() - sequenceNumberOperation->GetSize();
 				for (int i = 0; i < startIndex; i++)
 				{
-					if (stackOperands->empty())
+					if (stackOperands.empty())
 					{
 						throw std::runtime_error("Not enough operands for calculate operator");
 					}
 
-					sequenceNumberOperation->GetSequenceMemory()[i] = stackOperands->top();
-					stackOperands->pop();
+					sequenceNumberOperation->GetSequenceMemory()[i] = stackOperands.top();
+					stackOperands.pop();
 				}
 
 				switch (sequenceNumberOperation->GetExpression()->GetType())
 				{
 				case ExpressionType::Multiplication:
 				{
-					stackOperands->push(Multiplication(sequenceNumberOperation->GetSequenceMemory(), sequenceNumberOperation->GetExpectedParamsCount()));
+					stackOperands.push(Multiplication(sequenceNumberOperation->GetSequenceMemory(), sequenceNumberOperation->GetExpectedParamsCount()));
 					break;
 				}
 
 				case ExpressionType::Addition:
 				{
-					stackOperands->push(Addition(sequenceNumberOperation->GetSequenceMemory(), sequenceNumberOperation->GetExpectedParamsCount()));
+					stackOperands.push(Addition(sequenceNumberOperation->GetSequenceMemory(), sequenceNumberOperation->GetExpectedParamsCount()));
 					break;
 				}
 
@@ -73,7 +73,6 @@ namespace MathEngine
 				}
 				}
 
-				delete sequenceNumberOperation->GetExpression();
 				delete[] sequenceNumberOperation->GetSequenceMemory();
 				delete sequenceNumberOperation;
 
@@ -83,17 +82,16 @@ namespace MathEngine
 			if (chunk->GetExpression()->GetType() == ExpressionType::Sin)
 			{
 				Function* function = static_cast<Function*>(chunk->GetExpression());
-				if (stackOperands->size() < function->GetParametrsCount())
+				if (stackOperands.size() < function->GetParametrsCount())
 				{
 					throw std::runtime_error("Not enough operands for calculate operator Sin");
 				}
 
-				auto a = stackOperands->top();
-				stackOperands->pop();
+				auto a = stackOperands.top();
+				stackOperands.pop();
 
-				stackOperands->push(sin(a));
+				stackOperands.push(sin(a));
 
-				delete function;
 				delete chunk;
 				continue;
 			}
@@ -103,85 +101,80 @@ namespace MathEngine
 
 			case ExpressionType::Multiplication:
 			{
-				if (stackOperands->size() < 2)
+				if (stackOperands.size() < 2)
 				{
 					throw std::runtime_error("Not enough operands for calculate operator Multiplication");
 				}
 
-				auto b = stackOperands->top();
-				stackOperands->pop();
+				auto b = stackOperands.top();
+				stackOperands.pop();
 
-				auto a = stackOperands->top();
-				stackOperands->pop();
+				auto a = stackOperands.top();
+				stackOperands.pop();
 
-				stackOperands->emplace(a * b);
+				stackOperands.emplace(a * b);
 
 				break;
 			}
 
 			case ExpressionType::Addition:
 			{
-				if (stackOperands->size() < 2)
+				if (stackOperands.size() < 2)
 				{
 					throw std::runtime_error("Not enough operands for calculate operator Addition");
 				}
 
-				auto b = stackOperands->top();
-				stackOperands->pop();
+				auto b = stackOperands.top();
+				stackOperands.pop();
 
-				auto a = stackOperands->top();
-				stackOperands->pop();
+				auto a = stackOperands.top();
+				stackOperands.pop();
 
-				stackOperands->emplace(a + b);
+				stackOperands.emplace(a + b);
 				break;
 			}
 
 			case ExpressionType::Division:
 			{
-				if (stackOperands->size() < 2)
+				if (stackOperands.size() < 2)
 				{
 					throw std::runtime_error("Not enough operands for calculate operator Division");
 				}
 
-				auto b = stackOperands->top();
-				stackOperands->pop();
+				auto b = stackOperands.top();
+				stackOperands.pop();
 
-				auto a = stackOperands->top();
-				stackOperands->pop();
+				auto a = stackOperands.top();
+				stackOperands.pop();
 
-				stackOperands->emplace(a / b);
+				stackOperands.emplace(a / b);
 				break;
 			}
 
 			case ExpressionType::Subtraction:
 			{
-				if (stackOperands->size() < 2)
+				if (stackOperands.size() < 2)
 				{
 					throw std::runtime_error("Not enough operands for calculate operator Subtraction");
 				}
 
-				auto b = stackOperands->top();
-				stackOperands->pop();
+				auto b = stackOperands.top();
+				stackOperands.pop();
 
-				auto a = stackOperands->top();
-				stackOperands->pop();
+				auto a = stackOperands.top();
+				stackOperands.pop();
 
-				stackOperands->emplace(a - b);
+				stackOperands.emplace(a - b);
 				break;
 			}
 
 			}
 
 
-			delete chunk->GetExpression();
 			delete chunk;
 		}
 
-		auto result = stackOperands->top();
-
-		delete stackOperands;
-		delete queue;
-
+		auto result = stackOperands.top();
 		return result;
 	}
 

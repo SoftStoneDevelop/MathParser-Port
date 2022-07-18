@@ -10,7 +10,7 @@ namespace MathEngine
 		Associativity associativity,
 		int parametrsCount
 	) :
-		PatternExpression(type), _order{ order }, _associativity{ associativity }, _parametrsCount{parametrsCount}
+		PatternExpression(type, order, associativity), _parametrsCount{parametrsCount}
 	{
 
 	}

@@ -16,9 +16,9 @@ namespace MathEngine
 		std::queue<ChunkExpression*>& output
 	)
 	{
-		std::stack<Operator*>* stackOperators = new std::stack<Operator*>();
+		std::stack<std::shared_ptr<PatternExpression>> stackOperators = std::stack<std::shared_ptr<PatternExpression>>();
 		int numberLength = 0;
-		std::stack<ChunkExpression*>* sequenceStack = new std::stack<ChunkExpression*>();
+		std::stack<ChunkExpression*> sequenceStack = std::stack<ChunkExpression*>();
 
 		int sequenceSize = 0;
 		int expectedParamsSequence = 0;
@@ -33,47 +33,46 @@ namespace MathEngine
 
 			if (chars[i] == '(')
 			{
-				stackOperators->push(ParserHelper::CreateLeftBracket());
+				stackOperators.push(_parserHelper.LeftBracket);
 				continue;
 			}
 
 			if (chars[i] == ')')
 			{
-				if (stackOperators->empty())
+				if (stackOperators.empty())
 				{
 					throw std::runtime_error("The operator stack is empty");
 				}
 
-				while (!stackOperators->empty())
+				while (!stackOperators.empty())
 				{
-					Operator* top = stackOperators->top();
+					auto top = std::move(stackOperators.top());
 					if (top->GetType() == ExpressionType::LeftBracket)
 					{
 						break;
 					}
 
-					stackOperators->pop();
+					stackOperators.pop();
 					EnqueueOutput(
 						sequenceStack,
 						sequenceSize,
 						expectedParamsSequence,
 						output,
-						new ChunkExpression(ChunkType::BaseExpression, reinterpret_cast<ExpressionItem*>(top))
+						new ChunkExpression(ChunkType::BaseExpression, std::move(top))
 					);
 				}
 
-				if (stackOperators->empty())
+				if (stackOperators.empty())
 				{
 					throw std::runtime_error("There are mismatched parentheses 'Left Bracket'");
 				}
 
-				Operator* top = stackOperators->top();
-				delete top;
-				stackOperators->pop();
+				stackOperators.pop();
+				continue;
 			}
 
 			//check is number
-			numberLength = ParserHelper::IsNumber(chars, charsLength, i);
+			numberLength = _parserHelper.IsNumber(chars, charsLength, i);
 			if (numberLength != -1)
 			{
 				float number;
@@ -84,7 +83,7 @@ namespace MathEngine
 					sequenceSize,
 					expectedParamsSequence,
 					output,
-					new ChunkNumber(number, ParserHelper::CreateNumber())
+					new ChunkNumber(number, _parserHelper.Number)
 				);
 
 				i += numberLength - 1;
@@ -93,49 +92,49 @@ namespace MathEngine
 			}
 
 			//check is function
-			if (ParserHelper::IsSin(chars, charsLength, i, skipLength))
+			if (_parserHelper.IsSin(chars, charsLength, i, skipLength))
 			{
 				i += skipLength - 1;
 				skipLength = 0;
-				stackOperators->push(reinterpret_cast<Operator*>(ParserHelper::CreateSin()));
+				stackOperators.push(_parserHelper.Sin);
 				continue;
 			}
 
 			//check is operator
-			Operator* oper = nullptr;
-			if (ParserHelper::IsMultiplication(chars, charsLength, i, skipLength))
+			std::shared_ptr<PatternExpression> oper = nullptr;
+			if (_parserHelper.IsMultiplication(chars, charsLength, i, skipLength))
 			{
 				i += skipLength - 1;
 				skipLength = 0;
-				oper = ParserHelper::CreateMultiplication();
+				oper = _parserHelper.Multiplication;
 			}
 			else
-			if (ParserHelper::IsDivision(chars, charsLength, i, skipLength))
+			if (_parserHelper.IsDivision(chars, charsLength, i, skipLength))
 			{
 				i += skipLength - 1;
 				skipLength = 0;
-				oper = ParserHelper::CreateDivision();
+				oper = _parserHelper.Division;
 			}
 			else
-			if (ParserHelper::IsAddition(chars, charsLength, i, skipLength))
+			if (_parserHelper.IsAddition(chars, charsLength, i, skipLength))
 			{
 				i += skipLength - 1;
 				skipLength = 0;
-				oper = ParserHelper::CreateAddition();
+				oper = _parserHelper.Addition;
 			}
 			else
-			if (ParserHelper::IsSubtraction(chars, charsLength, i, skipLength))
+			if (_parserHelper.IsSubtraction(chars, charsLength, i, skipLength))
 			{
 				i += skipLength - 1;
 				skipLength = 0;
-				oper = ParserHelper::CreateSubtraction();
+				oper = _parserHelper.Subtraction;
 			}
 
 			if (oper != nullptr)
 			{
-				while (!stackOperators->empty())
+				while (!stackOperators.empty())
 				{
-					auto top = stackOperators->top();
+					auto top = stackOperators.top();
 					if (top->GetType() == ExpressionType::LeftBracket)
 					{
 						break;
@@ -146,27 +145,27 @@ namespace MathEngine
 						break;
 					}
 
-					stackOperators->pop();
+					stackOperators.pop();
 					EnqueueOutput(
 						sequenceStack,
 						sequenceSize,
 						expectedParamsSequence,
 						output,
-						new ChunkExpression(ChunkType::BaseExpression, top)
+						new ChunkExpression(ChunkType::BaseExpression, std::move(top))
 					);
 				}
 
-				stackOperators->push(oper);
+				stackOperators.push(std::move(oper));
 				continue;
 			}
 
 			throw std::runtime_error("Unknown symbol in expression - " + chars[i]);
 		}
 
-		while (!stackOperators->empty())
+		while (!stackOperators.empty())
 		{
-			auto top = stackOperators->top();
-			stackOperators->pop();
+			auto top = std::move(stackOperators.top());
+			stackOperators.pop();
 			if (top->GetType() == ExpressionType::LeftBracket)
 			{
 				throw std::runtime_error("There are mismatched parentheses 'Left Bracket in end'");
@@ -177,21 +176,21 @@ namespace MathEngine
 				sequenceSize,
 				expectedParamsSequence,
 				output,
-				new ChunkExpression(ChunkType::BaseExpression, top)
+				new ChunkExpression(ChunkType::BaseExpression, std::move(top))
 			);
 		}
 
-		if (!sequenceStack->empty())
+		if (!sequenceStack.empty())
 		{
-			auto top = sequenceStack->top();
-			sequenceStack->pop();
+			auto top = sequenceStack.top();
+			sequenceStack.pop();
 
 			if (top->GetExpression()->GetType() == ExpressionType::Number)
 			{
 				throw std::runtime_error("Sequence must ended on number");
 			}
 
-			if (sequenceStack->empty())
+			if (sequenceStack.empty())
 			{
 				output.push(top);
 			}
@@ -202,22 +201,19 @@ namespace MathEngine
 					sequenceSize,
 					expectedParamsSequence,
 					output,
-					top->GetExpression()
+					std::move(top->GetSharedExpression())
 				);
 
 				delete top;
 			}
 		}
-
-		delete stackOperators;
-		delete sequenceStack;
 	}
 
 	/// <summary>
 	/// Enqueue to Output queue and apply optimization
 	/// </summary>
 	void ShuntingYardAlgorithm::EnqueueOutput(
-		std::stack<ChunkExpression*>* const sequenceStack,
+		std::stack<ChunkExpression*>& sequenceStack,
 		int& sequenceSize,
 		int& expectedParamsCount,
 		std::queue<ChunkExpression*>& output,
@@ -228,36 +224,36 @@ namespace MathEngine
 		{
 		case ExpressionType::Number:
 		{
-			if (sequenceStack->empty())
+			if (sequenceStack.empty())
 			{
-				sequenceStack->push(newChunk);
+				sequenceStack.push(newChunk);
 				sequenceSize++;
 				expectedParamsCount++;
 				return;
 			}
 
-			auto chunk0 = sequenceStack->top();
+			auto chunk0 = sequenceStack.top();
 			if (chunk0->GetExpression()->GetType() == ExpressionType::Number)
 			{
-				sequenceStack->pop();
+				sequenceStack.pop();
 				sequenceSize--;
 				expectedParamsCount--;
 
-				if (!sequenceStack->empty())
+				if (!sequenceStack.empty())
 				{
-					auto chunk1 = sequenceStack->top();
+					auto chunk1 = sequenceStack.top();
 					if (chunk1->GetExpression()->GetType() == ExpressionType::Number)
 					{
 						throw std::runtime_error("Incorrect sequence");
 					}
-					sequenceStack->pop();
+					sequenceStack.pop();
 
-					WriteSequence(sequenceStack, sequenceSize, expectedParamsCount, output, chunk1->GetExpression());
+					WriteSequence(sequenceStack, sequenceSize, expectedParamsCount, output, std::move(chunk1->GetSharedExpression()));
 					delete chunk1;
 				}
 
 				output.push(chunk0);
-				sequenceStack->push(newChunk);
+				sequenceStack.push(newChunk);
 				sequenceSize++;
 				expectedParamsCount++;
 
@@ -265,7 +261,7 @@ namespace MathEngine
 			}
 			else
 			{
-				sequenceStack->push(newChunk);
+				sequenceStack.push(newChunk);
 				sequenceSize++;
 				expectedParamsCount++;
 				return;
@@ -277,37 +273,36 @@ namespace MathEngine
 		case ExpressionType::Multiplication:
 		case ExpressionType::Addition:
 		{
-			if (sequenceStack->empty())
+			if (sequenceStack.empty())
 			{
-				sequenceStack->push(newChunk);
+				sequenceStack.push(newChunk);
 				return;
 			}
 			else
 			{
-				auto chunk0 = sequenceStack->top();
+				auto chunk0 = sequenceStack.top();
 				if (chunk0->GetExpression()->GetType() == ExpressionType::Number)
 				{
-					if (sequenceStack->size() == 1)
+					if (sequenceStack.size() == 1)
 					{
-						sequenceStack->push(newChunk);
+						sequenceStack.push(newChunk);
 						return;
 					}
 					else
 					{
-						sequenceStack->pop();
-						auto chunk1 = sequenceStack->top();
+						sequenceStack.pop();
+						auto chunk1 = sequenceStack.top();
 						if (chunk1->GetExpression()->GetType() == ExpressionType::Number)
 						{
 							throw std::runtime_error("Incorrect sequence");
 						}
 
-						sequenceStack->pop();
+						sequenceStack.pop();
 
 						if (chunk1->GetExpression()->GetType() == newChunk->GetExpression()->GetType())
 						{
-							sequenceStack->push(chunk0);
-							sequenceStack->push(newChunk);
-							delete chunk1->GetExpression();
+							sequenceStack.push(chunk0);
+							sequenceStack.push(newChunk);
 							delete chunk1;
 						}
 						else
@@ -315,13 +310,13 @@ namespace MathEngine
 							sequenceSize--;
 							expectedParamsCount--;
 
-							WriteSequence(sequenceStack, sequenceSize, expectedParamsCount, output, chunk1->GetExpression());
+							WriteSequence(sequenceStack, sequenceSize, expectedParamsCount, output, std::move(chunk1->GetSharedExpression()));
 							delete chunk1;
 
-							sequenceStack->push(chunk0);
+							sequenceStack.push(chunk0);
 							sequenceSize = 1;
 							expectedParamsCount = 1;
-							sequenceStack->push(newChunk);
+							sequenceStack.push(newChunk);
 						}
 
 						return;
@@ -335,8 +330,8 @@ namespace MathEngine
 					}
 					else
 					{
-						sequenceStack->pop();
-						WriteSequence(sequenceStack, sequenceSize, expectedParamsCount, output, chunk0->GetExpression());
+						sequenceStack.pop();
+						WriteSequence(sequenceStack, sequenceSize, expectedParamsCount, output, std::move(chunk0->GetSharedExpression()));
 						delete chunk0;
 
 						output.push(newChunk);
@@ -349,30 +344,30 @@ namespace MathEngine
 
 		default:
 		{
-			if (sequenceStack->empty())
+			if (sequenceStack.empty())
 			{
 				output.push(newChunk);
 				return;
 			}
 			else
 			{
-				auto chunk0 = sequenceStack->top();
-				sequenceStack->pop();
+				auto chunk0 = sequenceStack.top();
+				sequenceStack.pop();
 				if (chunk0->GetExpression()->GetType() == ExpressionType::Number)
 				{
 					sequenceSize--;
 					expectedParamsCount--;
 
-					if (!sequenceStack->empty())
+					if (!sequenceStack.empty())
 					{
-						auto chunk1 = sequenceStack->top();
+						auto chunk1 = sequenceStack.top();
 						if (chunk1->GetExpression()->GetType() == ExpressionType::Number)
 						{
 							throw std::runtime_error("Incorrect sequence");
 						}
-						sequenceStack->pop();
+						sequenceStack.pop();
 
-						WriteSequence(sequenceStack, sequenceSize, expectedParamsCount, output, chunk1->GetExpression());
+						WriteSequence(sequenceStack, sequenceSize, expectedParamsCount, output, std::move(chunk1->GetSharedExpression()));
 						delete chunk1;
 					}
 
@@ -380,7 +375,7 @@ namespace MathEngine
 				}
 				else
 				{
-					WriteSequence(sequenceStack, sequenceSize, expectedParamsCount, output, chunk0->GetExpression());
+					WriteSequence(sequenceStack, sequenceSize, expectedParamsCount, output, std::move(chunk0->GetSharedExpression()));
 					delete chunk0;
 				}
 
@@ -394,11 +389,11 @@ namespace MathEngine
 	}
 
 	void ShuntingYardAlgorithm::WriteSequence(
-		std::stack<ChunkExpression*>* const sequenceStack,
+		std::stack<ChunkExpression*>& const sequenceStack,
 		int& sequenceSize,
 		int& expectedParamsCount,
 		std::queue<ChunkExpression*>& output,
-		ExpressionItem* oper
+		std::shared_ptr<ExpressionItem> oper
 	) 
 	{
 		//TODO get from pool
@@ -406,10 +401,10 @@ namespace MathEngine
 		try
 		{
 			int indexMemory = expectedParamsCount + 1 - sequenceSize;
-			while (!sequenceStack->empty())
+			while (!sequenceStack.empty())
 			{
-				auto item = sequenceStack->top();
-				sequenceStack->pop();
+				auto item = sequenceStack.top();
+				sequenceStack.pop();
 
 				if (item->GetExpression()->GetType() == ExpressionType::Number)
 				{
@@ -417,11 +412,10 @@ namespace MathEngine
 					indexMemory++;
 				}
 
-				delete item->GetExpression();
 				delete item;
 			}
 
-			output.push(new SequenceNumberOperation(reinterpret_cast<PatternExpression*>(oper), memory, sequenceSize, expectedParamsCount + 1));
+			output.push(new SequenceNumberOperation(static_pointer_cast<PatternExpression>(oper), memory, sequenceSize, expectedParamsCount + 1));
 		}
 		catch (const std::exception&)
 		{

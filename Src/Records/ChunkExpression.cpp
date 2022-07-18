@@ -1,14 +1,13 @@
 #pragma once
 
 #include "ChunkExpression.hpp"
-#include <istream>
 
 namespace MathEngine
 {
 	ChunkExpression::ChunkExpression(
 		ChunkType type,
-		ExpressionItem* expressionItem
-	) : _expressionItem{ expressionItem }, _type{type}
+		std::shared_ptr<ExpressionItem> expressionItem
+	) : _expressionItem{ std::move(expressionItem) }, _type{ type }
 	{
 
 	}

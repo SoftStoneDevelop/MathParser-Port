@@ -21,20 +21,6 @@ namespace MathEngine
 
 		Operator& operator=(Operator&& other) = delete;
 		Operator& operator=(const Operator& other) = delete;
-
-		const Associativity& GetAssociativity() const
-		{
-			return _associativity;
-		}
-
-		const int& GetOrder() const
-		{
-			return _order;
-		}
-
-	private:
-		int _order;
-		Associativity _associativity;
 	};
 
 }//namespace MathEngine

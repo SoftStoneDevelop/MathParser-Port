@@ -12,6 +12,11 @@ int main()
 	std::cout << "Write 'Exit' for close application\n";
 	MathEngine::MathEngine engine;
 
+	/*for (int i = 0; i < 100000; i++)
+	{
+		auto result = engine.CalculateExpression("5 - 2 + 11");
+	}*/
+
 	std::string line;
 	while (true)
 	{

@@ -5,13 +5,13 @@
 namespace MathEngine
 {
 	SequenceNumberOperation::SequenceNumberOperation(
-		PatternExpression* patternExp,
+		std::shared_ptr<PatternExpression> patternExp,
 		float* sequenceMemory,
 		int size,
 		int expectedParamsCount
 		//TODO pool arrays
 	) :
-		ChunkExpression(ChunkType::SequenceNumberOperation, patternExp),
+		ChunkExpression(ChunkType::SequenceNumberOperation, std::move(patternExp)),
 		_sequenceMemory{ sequenceMemory },
 		_size{ size },
 		_expectedParamsCount{ expectedParamsCount }

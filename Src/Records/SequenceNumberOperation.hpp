@@ -3,7 +3,6 @@
 #include "..\Enums\ChunkType.hpp"
 #include "ChunkExpression.hpp"
 #include "PatternExpression.hpp"
-#include <iostream>
 
 namespace MathEngine
 {
@@ -11,7 +10,7 @@ namespace MathEngine
 	{
 	public:
 		SequenceNumberOperation(
-			PatternExpression* patternExp,
+			std::shared_ptr<PatternExpression> patternExp,
 			float* sequenceMemory,
 			int size,
 			int expectedParamsCount
@@ -45,7 +44,7 @@ namespace MathEngine
 		float* _sequenceMemory;
 		int _size;
 		int _expectedParamsCount;
-		PatternExpression* _patternExp;
+		std::shared_ptr<PatternExpression> _patternExp;
 		//TODO pool arrays
 	};
 
