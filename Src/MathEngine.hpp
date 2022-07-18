@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include "Algorithms/ShuntingYardAlgorithm.hpp"
 
 namespace MathEngine
 {
@@ -14,5 +15,8 @@ namespace MathEngine
 		float Multiplication(float* data, const int& size);
 
 		float Addition(float* data, const int& size);
+
+	private:
+		ShuntingYardAlgorithm _sya;
 	};
 }

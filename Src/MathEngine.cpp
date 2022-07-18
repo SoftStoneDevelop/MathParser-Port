@@ -1,7 +1,6 @@
 #pragma once
 
 #include "MathEngine.hpp"
-#include "Algorithms/ShuntingYardAlgorithm.hpp"
 #include "Records/Function.hpp"
 #include "Records/ChunkNumber.hpp"
 #include "Records/SequenceNumberOperation.hpp"
@@ -21,8 +20,7 @@ namespace MathEngine
 	)
 	{
 		std::queue<ChunkExpression*> queue = std::queue<ChunkExpression*>();
-		ShuntingYardAlgorithm sya;
-		sya.ToRVNOpt(expression, expressionSize, queue);
+		_sya.ToRVNOpt(expression, expressionSize, queue);
 		std::stack<float> stackOperands = std::stack<float>();
 
 		while (!queue.empty())
