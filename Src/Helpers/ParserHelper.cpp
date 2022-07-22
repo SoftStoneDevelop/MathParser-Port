@@ -120,7 +120,14 @@ namespace MathEngine
         return false;
     }
 
-    int ParserHelper::IsNumber(const char* chars, const int& size, int startIndex)
+    bool ParserHelper::CanBeNegativeNumber(const ExpressionType& lastType)
+    {
+        return 
+            lastType != ExpressionType::RightBracket && 
+            lastType != ExpressionType::Number;
+    }
+
+    int ParserHelper::IsNumber(const char* chars, const int& size, int startIndex, const bool& canBeNagative)
     {
         int payload = size - startIndex;
         if (payload < 1)
@@ -128,19 +135,24 @@ namespace MathEngine
             throw std::runtime_error("Empty array");
         }
 
-        const char* number = std::find(_numbers, _numbers + _numbersSize, chars[startIndex]);
+        int i = startIndex;
+        if (canBeNagative && chars[i] == '-')
+        {
+            i++;
+        }
+
+        const char* number = std::find(_numbers, _numbers + _numbersSize, chars[i]);
         if (number == _numbers + _numbersSize)
         {
             return -1;
         }
 
-        if (payload > 2 && chars[startIndex] == '0' && chars[startIndex + 1] == '0')
+        if (payload > 2 && chars[i] == '0' && chars[i + 1] == '0')
         {
             throw std::runtime_error("Incorrect number");
         }
 
         bool findSeparator = false;
-        int i = startIndex;
         for (; i < size; i++)
         {
             if (chars[i] == ' ')

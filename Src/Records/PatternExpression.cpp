@@ -8,7 +8,7 @@ namespace MathEngine
 		ExpressionType type,
 		int order,
 		Associativity associativity
-	) : ExpressionItem(type)
+	) : ExpressionItem(type), _order{order}, _associativity{associativity}
 	{
 
 	}

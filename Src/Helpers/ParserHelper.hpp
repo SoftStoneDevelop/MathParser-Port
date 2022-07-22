@@ -56,7 +56,9 @@ namespace MathEngine
             int& skipLength
         );
 
-        int IsNumber(const char* chars, const int& size, int startIndex);
+        bool CanBeNegativeNumber(const ExpressionType& lastType);
+
+        int IsNumber(const char* chars, const int& size, int startIndex, const bool& canBeNagative);
 
         const std::shared_ptr<Operator> Multiplication;
         const std::shared_ptr<Operator> Division;

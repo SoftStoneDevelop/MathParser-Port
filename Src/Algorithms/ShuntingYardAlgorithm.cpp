@@ -24,6 +24,7 @@ namespace MathEngine
 		int expectedParamsSequence = 0;
 
 		int skipLength = 0;
+		ExpressionType lastType = ExpressionType::None;
 		for (int i = 0; i < charsLength; i++)
 		{
 			if (chars[i] == ' ')
@@ -34,6 +35,7 @@ namespace MathEngine
 			if (chars[i] == '(')
 			{
 				stackOperators.push(_parserHelper.LeftBracket);
+				lastType = ExpressionType::LeftBracket;
 				continue;
 			}
 
@@ -68,11 +70,13 @@ namespace MathEngine
 				}
 
 				stackOperators.pop();
+
+				lastType = ExpressionType::RightBracket;
 				continue;
 			}
 
 			//check is number
-			numberLength = _parserHelper.IsNumber(chars, charsLength, i);
+			numberLength = _parserHelper.IsNumber(chars, charsLength, i, _parserHelper.CanBeNegativeNumber(lastType));
 			if (numberLength != -1)
 			{
 				float number;
@@ -88,6 +92,7 @@ namespace MathEngine
 
 				i += numberLength - 1;
 
+				lastType = ExpressionType::Number;
 				continue;
 			}
 
@@ -97,6 +102,8 @@ namespace MathEngine
 				i += skipLength - 1;
 				skipLength = 0;
 				stackOperators.push(_parserHelper.Sin);
+
+				lastType = ExpressionType::Sin;
 				continue;
 			}
 
@@ -107,6 +114,7 @@ namespace MathEngine
 				i += skipLength - 1;
 				skipLength = 0;
 				oper = _parserHelper.Multiplication;
+				lastType = ExpressionType::Multiplication;
 			}
 			else
 			if (_parserHelper.IsDivision(chars, charsLength, i, skipLength))
@@ -114,6 +122,7 @@ namespace MathEngine
 				i += skipLength - 1;
 				skipLength = 0;
 				oper = _parserHelper.Division;
+				lastType = ExpressionType::Division;
 			}
 			else
 			if (_parserHelper.IsAddition(chars, charsLength, i, skipLength))
@@ -121,6 +130,7 @@ namespace MathEngine
 				i += skipLength - 1;
 				skipLength = 0;
 				oper = _parserHelper.Addition;
+				lastType = ExpressionType::Addition;
 			}
 			else
 			if (_parserHelper.IsSubtraction(chars, charsLength, i, skipLength))
@@ -128,6 +138,7 @@ namespace MathEngine
 				i += skipLength - 1;
 				skipLength = 0;
 				oper = _parserHelper.Subtraction;
+				lastType = ExpressionType::Subtraction;
 			}
 
 			if (oper != nullptr)
