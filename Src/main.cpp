@@ -9,7 +9,7 @@
 
 int main()
 {
-	std::cout << "Write 'Exit' for close application\n";
+	std::cout << "Write 'Exit' for close application" << std::endl;
 	MathEngine::MathEngine engine;
 
 	/*for (int i = 0; i < 100000; i++)
@@ -34,11 +34,11 @@ int main()
 		try
 		{
 			auto result = engine.CalculateExpression(line);
-			std::cout << "Result:=" << result << "\n";
+			std::cout << "Result:=" << result << std::endl;
 		}
 		catch (const std::exception& ex)
 		{
-			std::cout << ex.what() << "\n";
+			std::cout << ex.what() << std::endl;
 		}
 	}
 
