@@ -1,1 +1,5 @@
-Порт проекта [MathParser](https://github.com/SoftStoneDevelop/MathParser) на C++.
+Порт проекта [MathParser](https://github.com/SoftStoneDevelop/MathParser) на C++.<br>
+Разбор и вычисление произвольных математических выражений.<br>
+Например:<br>
+* Выражение '2 + 3 * 4 - 5' - Результат '9'<br>
+* Выражение '(2 + 3) * 4 - 5' - результат '15'<br>
